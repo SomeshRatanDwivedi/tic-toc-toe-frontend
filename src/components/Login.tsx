@@ -4,15 +4,17 @@ import { toast } from "react-toastify";
 import { validateUserForm } from "../utility";
 
 interface LoginProps {
+  loading?: boolean;
   onLogin: (formValue: UserFormValueType) => void;
   switchToSignup: () => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onLogin, switchToSignup }) => {
+const Login: React.FC<LoginProps> = ({ onLogin, switchToSignup, loading }) => {
   const [formValue, setFormValue] = useState<UserFormValueType>({
     username: "",
     password: ""
   });
+ 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,9 +48,10 @@ const Login: React.FC<LoginProps> = ({ onLogin, switchToSignup }) => {
         />
         <button
           type="submit"
-          className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:!cursor-not-allowed"
+          disabled={loading}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
       <p className="mt-4 text-gray-700">
