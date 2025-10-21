@@ -4,7 +4,7 @@ import type { GameRecordType } from "../types";
 export default function GamesPlayed({ games }: { games: GameRecordType[] }) {
   const user= JSON.parse(localStorage.getItem("user") || "{}");
   return (
-    <div className="p-6 text-gray-900">
+    <div className="p-6 text-gray-900 h-full">
       <h1 className="text-3xl font-extrabold mb-6 text-center text-indigo-600">
         🎮 Games Played by Me
       </h1>
@@ -12,7 +12,7 @@ export default function GamesPlayed({ games }: { games: GameRecordType[] }) {
       {games.length === 0 ? (
         <p className="text-center text-gray-500 text-lg">No games played yet 😔</p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 h-[calc(100%-39px)] overflow-y-auto">
           {games.map((game) => {
             const formattedDate = new Date(game.createdAt).toLocaleString();
             const isWinner = game.status === "finished" && game.winner?.username;
@@ -52,7 +52,7 @@ export default function GamesPlayed({ games }: { games: GameRecordType[] }) {
                         {game.winner.id===user.id?' You':game.winner.username}
                       </span>
                     ) : (
-                      "—"
+                      <span className="text-gray-500">Draw</span>
                     )}
                   </p>
                   <p className="text-gray-500 text-xs">

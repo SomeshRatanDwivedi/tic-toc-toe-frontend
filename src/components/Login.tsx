@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import type { UserFormValueType } from "../types";
-import { toast } from "react-toastify";
 import { validateUserForm } from "../utility";
 
 interface LoginProps {
@@ -14,6 +13,10 @@ const Login: React.FC<LoginProps> = ({ onLogin, switchToSignup, loading }) => {
     username: "",
     password: ""
   });
+  const [error, setError] = useState<{ usernameError: string; passwordError: string }>({
+    usernameError: "",
+    passwordError: ""
+  });
  
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -21,7 +24,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, switchToSignup, loading }) => {
     if (formValue.username.trim() && formValue.password.trim()) {
       const validation = validateUserForm(formValue.username, formValue.password);
       if (!validation.valid) {
-        toast.error(validation.message);
+        setError({ usernameError: validation.errors.username || "", passwordError: validation.errors.password || "" });
         return;
       }
       onLogin(formValue);
@@ -39,6 +42,8 @@ const Login: React.FC<LoginProps> = ({ onLogin, switchToSignup, loading }) => {
           onChange={(e) => setFormValue({ ...formValue, username: e.target.value })}
           className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400"
         />
+        {/* For showing error messages */}
+        {error.usernameError && <p className="text-red-500 text-sm">{error.usernameError}</p>}
         <input
           type="password"
           placeholder="Enter your password"
@@ -46,6 +51,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, switchToSignup, loading }) => {
           onChange={(e) => setFormValue({ ...formValue, password: e.target.value })}
           className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400"
         />
+        {error.passwordError && <p className="text-red-500 text-sm">{error.passwordError}</p>}
         <button
           type="submit"
           className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:!cursor-not-allowed"

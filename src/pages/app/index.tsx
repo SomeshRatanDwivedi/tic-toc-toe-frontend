@@ -14,6 +14,7 @@ interface Game {
   players: { X: PlayersType; O: PlayersType };
   status: "playing" | "finished";
   winner?: "X" | "O" | null;
+  winningLine?: number[];
 }
 
 const GamePage: React.FC = () => {
@@ -96,8 +97,8 @@ const GamePage: React.FC = () => {
   }, [game?.status]);
 
   return (
-    <div className="min-h-full flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-600">Multiplayer Tic-Tac-Toe</h1>
+    <div className="h-full flex flex-col items-center justify-center bg-gray-100">
+      <h1 className="md:text-4xl font-bold text-blue-600 text-lg">Multiplayer Tic-Tac-Toe</h1>
       {waitingForOpponent && <WaitingForMatch />}
       <div className="flex">
         {!game && <button type="button" disabled={waitingForOpponent} onClick={findMatch} className="mt-8 px-6 py-2 mr-4 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition disabled:opacity-50 disabled:!cursor-not-allowed">Find Match</button>}
@@ -115,7 +116,7 @@ const GamePage: React.FC = () => {
 
           <p className="my-4 text-red-800 text-2xl font-bold">Symbol: {opponent?.symbol === "X" ? "O" : "X"}</p>
 
-          <Board board={game.board} onMove={handleMove} />
+          <Board board={game.board} onMove={handleMove} winningLine={game.winningLine}/>
           {game.status === "finished" && (
             <>
             <h2 className={"mt-4 text-2xl font-bold " + (game.winner !== opponent?.symbol ? "text-green-600" : "text-red-600")}>

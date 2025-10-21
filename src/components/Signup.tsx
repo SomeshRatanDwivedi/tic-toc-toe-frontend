@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import type { UserFormValueType } from "../types";
-import { toast } from "react-toastify";
 import { validateUserForm } from "../utility";
 
 interface SignupProps {
@@ -14,6 +13,10 @@ const Signup: React.FC<SignupProps> = ({ onSignup, switchToLogin, loading }) => 
      username: "",
      password: "",
    });
+  const [error, setError] = useState<{ usernameError: string; passwordError: string }>({
+    usernameError: "",
+    passwordError: ""
+  });
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -21,7 +24,7 @@ const Signup: React.FC<SignupProps> = ({ onSignup, switchToLogin, loading }) => 
     if (formValue.username.trim() && formValue.password.trim()) {
       const validation = validateUserForm(formValue.username, formValue.password);
       if (!validation.valid) {
-        toast.error(validation.message);
+        setError({ usernameError: validation.errors.username || "", passwordError: validation.errors.password || "" });
         return;
       }
       onSignup(formValue);
@@ -39,6 +42,7 @@ const Signup: React.FC<SignupProps> = ({ onSignup, switchToLogin, loading }) => 
           onChange={(e) => setFormValue({ ...formValue, username: e.target.value })}
           className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900 placeholder-gray-400"
         />
+        {error.usernameError && <p className="text-red-500 text-sm">{error.usernameError}</p>}
         <input
           type={showPassword ? "text" : "password"}
           placeholder="Choose a Password"
@@ -46,6 +50,7 @@ const Signup: React.FC<SignupProps> = ({ onSignup, switchToLogin, loading }) => 
           onChange={(e) => setFormValue({ ...formValue, password: e.target.value })}
           className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900 placeholder-gray-400"
         />
+        {error.passwordError && <p className="text-red-500 text-sm">{error.passwordError}</p>}
         <div className="w-full flex items-center">
           <input
             type="checkbox"
